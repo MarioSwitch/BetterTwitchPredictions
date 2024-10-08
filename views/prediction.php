@@ -47,7 +47,7 @@ $svgVotes = "<abbr title='" . getString("prediction_table_bet_count") . "'><img 
 $svgPoints = "<abbr title='" . getString("points_spent") . "'><img src='svg/points.svg'></abbr>";
 $svgRatio = "<abbr title='" . getString("prediction_table_bet_multiplier") . "'><img src='svg/cup.svg'></abbr>";
 $svgMax = "<abbr title='" . getString("prediction_table_bet_record") . "'><img src='svg/podium.svg'></abbr>";
-$prediChoicesText = "<table><tr><th>" . getString("choices") . "</th><th>" . $svgVotes . "</th><th>" . $svgPoints . "</th><th>" . $svgRatio . "</th><th>" . $svgMax . "</th></tr>";
+$prediChoicesText = "<span id='table'><table><tr><th>" . getString("choices") . "</th><th>" . $svgVotes . "</th><th>" . $svgPoints . "</th><th>" . $svgRatio . "</th><th>" . $svgMax . "</th></tr>";
 for($i = 0; $i < count($prediChoices); $i++){
     $choiceID = $prediChoices[$i]["id"];
     $votesChoice = intSQL("SELECT COUNT(*) FROM `votes` WHERE `prediction` = ? AND `choice` = ?;", [$_REQUEST["id"], $choiceID]);
@@ -94,7 +94,7 @@ if($pointsMaxTotal){
     }
     $pointsMaxTotalUsersText = $pointsMaxTotalUsersText . "</small>";
 }
-$prediChoicesText = $prediChoicesText . "<tr><th>" . getString("total") . "</th><th>" . displayInt($votesTotal) . "</th><th>" . displayInt($pointsTotal) . "</th><th>" . getString("n_a") . "</th><th>" . displayInt($pointsMaxTotal) . $pointsMaxTotalUsersText . "</th></tr></table>";
+$prediChoicesText = $prediChoicesText . "<tr><th>" . getString("total") . "</th><th>" . displayInt($votesTotal) . "</th><th>" . displayInt($pointsTotal) . "</th><th>" . getString("n_a") . "</th><th>" . displayInt($pointsMaxTotal) . $pointsMaxTotalUsersText . "</th></tr></table></span>";
 
 //Dynamic content
 if(array_key_exists("username",$_COOKIE)){
@@ -216,3 +216,5 @@ echo "<script>displayDateTime(\"$prediEnd\",\"endedCountdown\");</script>";
 if($prediAnswered != NULL){
     echo "<script>displayDateTime(\"$prediAnswered\",\"answeredCountdown\");</script>";
 }
+include_once "refreshTable.js.php";
+echo "<script>refreshTable(" . $_REQUEST["id"] . ");</script>";

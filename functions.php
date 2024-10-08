@@ -263,14 +263,16 @@ function displayUsername($username){
  * Displays an int value
  * @param int $int int to be displayed
  * @param bool $short true will short display using SI prefixes (M (mega), G (giga), T (tera), P (peta) and E (exa))
+ * @param bool $forceSign true will display "+" before positive numbers and "±" before zero
  * @return string
  */
-function displayInt($int, $short = true){
+function displayInt($int, $short = true, $forceSign = false){
     if($int >= 9e18) return "—"; // PHP_INT_MAX is a placeholder, should not be displayed
     $full_number = number_format($int, 0, getString("decimal_separator"), getString("thousands_separator"));
     $sln = getSetting("sln");
+    $sign = $forceSign?($int>0?"+":($int==0?"±":"")):"";
     if(!$short || $int<1000000 || $sln == "no"){
-        return  $full_number;
+        return  $sign . $full_number;
     }
     $string = (string) $int;
     $digits = strlen($string);
@@ -299,7 +301,7 @@ function displayInt($int, $short = true){
     $divisor = pow(10,(3-($digits%3))%3);
     $result = ((float)$cropped_result) / $divisor;
     $formatted_result = number_format($result, (3-($digits%3))%3, getString("decimal_separator"), getString("thousands_separator"));
-    return "<abbr title='". $full_number . "'>" . $formatted_result . " " . $prefix . "</abbr>";
+    return "<abbr title='". $sign . $full_number . "'>" . $sign . $formatted_result . " " . $prefix . "</abbr>";
 }
 
 /**
